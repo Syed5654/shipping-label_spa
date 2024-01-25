@@ -107,47 +107,47 @@ const downloadPDF = async () => {
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="name" class="form-label">Name</label>
-                      <input type="text" class="form-control" id="name" placeholder="Name"
+                      <label for="sender_name" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="sender_name" placeholder="Name"
                         v-model="data.sender_address.name">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="company" class="form-label">Company <span
+                      <label for="sender_company" class="form-label">Company <span
                           class="text-black-50 fst-italic">(Optional)</span></label>
-                      <input type="text" class="form-control" id="company" placeholder="Company"
+                      <input type="text" class="form-control" id="sender_company" placeholder="Company"
                         v-model="data.sender_address.company">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="street" class="form-label">Street </label>
-                      <input type="text" class="form-control" id="street" placeholder="Street"
+                      <label for="sender_street" class="form-label">Street </label>
+                      <input type="text" class="form-control" id="sender_street" placeholder="Street"
                         v-model="data.sender_address.street">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="street_2" class="form-label">Street 2 <span
+                      <label for="sender_street_2" class="form-label">Street 2 <span
                           class="text-black-50 fst-italic">(Optional)</span></label>
-                      <input type="text" class="form-control" id="street_2" placeholder="Street 2"
+                      <input type="text" class="form-control" id="sender_street_2" placeholder="Street 2"
                         v-model="data.sender_address.street_2">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="zip" class="form-label">Zip</label>
-                      <input type="number" class="form-control" id="zip" placeholder="Zip"
+                      <label for="sender_zip" class="form-label">Zip</label>
+                      <input type="number" class="form-control" id="sender_zip" placeholder="Zip"
                         v-model="data.sender_address.zip">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="state" class="form-label">State</label>
-                      <select class="form-select" id="state" v-model="data.sender_address.state">
+                      <label for="sender_state" class="form-label">State</label>
+                      <select class="form-select" id="sender_state" v-model="data.sender_address.state">
                         <option selected disabled></option>
                         <option value="state1">state1</option>
                       </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="city" class="form-label">City</label>
-                      <input type="text" class="form-control" id="city" placeholder="City"
+                      <label for="sender_city" class="form-label">City</label>
+                      <input type="text" class="form-control" id="sender_city" placeholder="City"
                         v-model="data.sender_address.city">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="country" class="form-label">Country</label>
-                      <select class="form-select" id="country" v-model="data.sender_address.country">
+                      <label for="sender_country" class="form-label">Country</label>
+                      <select class="form-select" id="sender_country" v-model="data.sender_address.country">
                         <option selected disabled></option>
                         <option value="country1">country1</option>
                       </select>
