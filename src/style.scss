@@ -1,0 +1,39 @@
+$primary: #F69B30;
+$secondary: #343A40;
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+
+@font-face {
+  font-family: 'Ubuntu-Light';
+  src: url('./assets/fonts/Ubuntu-Light.ttf');
+}
+@font-face {
+  font-family: 'Ubuntu-Regular';
+  src: url('./assets/fonts/Ubuntu-Regular.ttf');
+}
+@font-face {
+  font-family: 'Ubuntu-Medium';
+  src: url('./assets/fonts/Ubuntu-Medium.ttf');
+}
+@font-face {
+  font-family: 'Ubuntu-Bold';
+  src: url('./assets/fonts/Ubuntu-Bold.ttf');
+}
+
+body{
+  font-family: 'Ubuntu-Regular';
+}
+
+.font-light{
+  font-family: 'Ubuntu-Light';
+}
+.font-regular{
+  font-family: 'Ubuntu-Regular';
+}
+.font-medium{
+  font-family: 'Ubuntu-Medium';
+}
+.font-bold{
+  font-family: 'Ubuntu-Bold';
+}
