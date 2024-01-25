@@ -39,11 +39,7 @@ const isAnyFieldEmpty = () => {
 
 
 const submitData = () => {
-  if (isAnyFieldEmpty()) {
-    console.log('empty');
-  } else {
-      downloadPDF()
-  }
+  downloadPDF()
 
 
 }
@@ -215,10 +211,12 @@ const downloadPDF = async () => {
             </div>
           </div>
           <div class="text-center">
-            <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded" @click="submitData" id="generate-btn">Generate
+            <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded" @click="submitData"
+              id="generate-btn">Generate
               Label</button>
           </div>
         </div>
       </div>
     </div>
-</div></template>
+  </div>
+</template>
