@@ -215,7 +215,7 @@ const downloadPDF = async () => {
             </div>
           </div>
           <div class="text-center">
-            <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded" @click="submitData">Generate
+            <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded" @click="submitData" id="generate-btn">Generate
               Label</button>
           </div>
         </div>
