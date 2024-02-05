@@ -7,8 +7,31 @@ const router = createRouter({
       path: "/",
       name: "form",
       component: () => import("../views/Form.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("../views/auth/Register.vue"),
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("../views/auth/Login.vue"),
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const jsonData = localStorage.getItem("user");
+  const userData = JSON.parse(jsonData);
+  if ( to.meta.requiresAuth && !userData) {
+    next("/login");
+  } else {
+    next();
+  }
 });
 
 export default router;
