@@ -1,5 +1,5 @@
 <script setup>
-import axios from "axios";
+import Api from "@/assets/js/Api"
 import { ref } from "vue";
 
 const loading = ref(false);
@@ -29,7 +29,7 @@ const submitData = () => {
   loading.value = true;
 
   axios
-    .post("http://127.0.0.1:3000/api/get-label", data.value)
+    Api.post("get-label", data.value)
     .then(async (res) => {
       console.log(res.data);
       pdfLink.value = res.data.pdf;

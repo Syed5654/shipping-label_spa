@@ -12,6 +12,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/history",
+      name: "history",
+      component: () => import("../views/LabelsHistory.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/register",
       name: "register",
       component: () => import("../views/auth/Register.vue"),

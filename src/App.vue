@@ -1,5 +1,5 @@
 <script setup>
-import Navbar from "./components/layouts/Navbar.vue";
+import Navbar from "@/components/layouts/Navbar.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { onBeforeMount, ref } from "vue";
