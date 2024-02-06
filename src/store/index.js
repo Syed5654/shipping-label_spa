@@ -7,7 +7,8 @@ const store = createStore({
         id: null,
         name: null,
         accessToken: null
-      }
+      },
+      isLoggedIn: false
     };
   },
   mutations: {},

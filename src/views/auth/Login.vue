@@ -1,6 +1,6 @@
 <script setup>
 import Api from "@/assets/js/Api";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -15,6 +15,12 @@ const validation_message = ref({
   email: "",
   password: "",
 });
+
+onMounted(()=> {
+  if(store.state.isLoggedIn){
+    router.push('/')
+  }
+})
 
 const handleLogin = () => {
   loading.value = true;
@@ -41,6 +47,7 @@ const handleLogin = () => {
       } else {
         loading.value = false;
         store.state.user = res.data.user;
+        store.state.isLoggedIn = true
         const user = JSON.stringify(res.data.user)
         localStorage.setItem("user", user);
         success();

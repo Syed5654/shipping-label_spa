@@ -11,32 +11,35 @@ const store = useStore();
 const jsonData = localStorage.getItem("user");
 const userData = JSON.parse(jsonData);
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   if (userData) {
     store.state.user = userData;
-    await validateUser();
+    if(!store.state.isLoggedIn){
+      validateUser();
+    }
   }
 });
 
 const validateUser = async () => {
-  await Api.post(
-    "validate-user",
-    { userId: userData.id },
-    {
-      headers: {
-        Authorization: `Bearer ${userData.accessToken}`,
-      },
-    }
-  )
-    .then((res) => {
-      if (res.data.error) {
-        router.push("/login");
+  try {
+    await Api.post("validate-user", { userId: userData.id },
+      {
+        headers: {
+          Authorization: `Bearer ${userData.accessToken}`,
+        },
       }
-    })
-    .catch((error) => {
-      console.error("Internal Server Error");
-      router.push("/login");
+    ).then((res) => {
+      if (res.data.error) {
+        localStorage.removeItem('user')
+        router.push("/login");
+      }else{
+        store.state.isLoggedIn = true
+      }
     });
+  } catch (error) {
+    router.push("/login");
+    console.error("Internal Server Error", error);
+  }
 };
 </script>
 
