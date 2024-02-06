@@ -10,11 +10,12 @@ const router = useRouter();
 const store = useStore();
 const jsonData = localStorage.getItem("user");
 const userData = JSON.parse(jsonData);
+const loading = ref(false)
 
 onBeforeMount(() => {
   if (userData) {
     store.state.user = userData;
-    if(!store.state.isLoggedIn){
+    if (!store.state.isLoggedIn) {
       validateUser();
     }
   }
@@ -22,6 +23,7 @@ onBeforeMount(() => {
 
 const validateUser = async () => {
   try {
+    loading.value = true;
     await Api.post("validate-user", { userId: userData.id },
       {
         headers: {
@@ -29,23 +31,34 @@ const validateUser = async () => {
         },
       }
     ).then((res) => {
-      if (res.data.error) {
-        localStorage.removeItem('user')
-        router.push("/login");
-      }else{
+      if (!res.data.error) {
         store.state.isLoggedIn = true
+        loading.value = false
+      } else {
+        store.state.isLoggedIn = false
+        localStorage.removeItem('user')
+        loading.value = false;
+        router.push("/login");
       }
     });
   } catch (error) {
+    store.state.isLoggedIn = false
+    localStorage.removeItem('user')
+    loading.value = false
     router.push("/login");
-    console.error("Internal Server Error", error);
+    console.error("Internal Server Error");
   }
 };
 </script>
 
 <template>
-  <Navbar
-    v-if="route.name && route.name !== 'register' && route.name !== 'login'"
-  />
-  <RouterView />
+  <div class="vh-100 w-100 d-flex align-items-center justify-content-center" v-if="loading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div v-else>
+    <Navbar v-if="route.name && route.name !== 'register' && route.name !== 'login'" />
+    <RouterView />
+  </div>
 </template>
