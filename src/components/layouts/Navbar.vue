@@ -11,14 +11,14 @@ const logOut = () => {
 <template>
   <div class="navbar shadow-sm bg-dark">
     <div class="container">
-      <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between w-100">
         <div>
           <router-link to="/" class="fs-1 fst-italic font-bold text-primary text-decoration-none">Logo.</router-link>
         </div>
         <div>
           <router-link to="/" class="text-white text-decoration-none me-4 font-medium">Generate Label</router-link>
           <router-link to="/history" class="text-white text-decoration-none me-4 font-medium">Order History</router-link>
-          <button class="btn btn-light" @click="logOut">Logout</button>
+          <button class="btn btn-light btn-sm" @click="logOut">Logout</button>
         </div>
       </div>
     </div>

@@ -1,8 +1,36 @@
+<script setup>
+import Api from '@/assets/js/Api'
+import { onMounted, ref } from 'vue'
+import { useStore } from 'vuex'
+const store = useStore()
+const userId = store.state.user.id
+const accessToken = store.state.user.accessToken
+const orderHistory = ref([])
+
+onMounted(() => {
+  getOrderHistory()
+})
+
+const getOrderHistory = async () => {
+  try {
+    await Api.post(`get-history`, { userId: userId }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }).then((res) => {
+      orderHistory.value = res.data.orderHistory
+    })
+
+  } catch (error) {
+    console.log('Internal Server Error', error);
+  }
+}
+</script>
 <template>
   <div class="history py-5 bg-light">
     <div class="container">
       <h2 class="font-bold text-primary mb-3">Orders History</h2>
-      <div class="card">
+      <div class="card overflow-auto">
         <div class="card-body">
           <table class="table table-striped">
             <thead>
@@ -18,35 +46,19 @@
               </tr>
             </thead>
             <tbody class="table-group-divider">
-              <tr>
+              <tr v-for="(order, index) in orderHistory" :key="index" class="align-middle">
                 <td>USPS Priority Shippo</td>
-                <td>Mark</td>
-                <td>Otto</td>
+                <td>{{ order.sender_name }}</td>
+                <td>{{ order.receiver_name }}</td>
                 <td>123456789</td>
                 <td>$5.00</td>
                 <td><span class="badge bg-success">Success</span></td>
-                <td>10/10/24</td>
-                <td>Download</td>
+                <td><small>{{ new Date(order.createdAt).toLocaleDateString() }}, {{ new
+                  Date(order.createdAt).toLocaleTimeString() }}</small></td>
+                <td> <button class="btn btn-primary"><i class="bi bi-download"></i> PDF</button></td>
               </tr>
-              <tr>
-                <td>USPS Priority Shippo</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>123456789</td>
-                <td>$5.00</td>
-                <td><span class="badge bg-success">Success</span></td>
-                <td>10/10/24</td>
-                <td>Download</td>
-              </tr>
-              <tr>
-                <td>USPS Priority Shippo</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>123456789</td>
-                <td>$5.00</td>
-                <td><span class="badge bg-success">Success</span></td>
-                <td>10/10/24</td>
-                <td>Download</td>
+              <tr v-if="orderHistory.length === 0" class="align-middle">
+                <td class="text-center" colspan="8">No data Found</td>
               </tr>
             </tbody>
           </table>
@@ -56,7 +68,6 @@
   </div>
 </template>
 <style lang="scss" scoped>
-.history{
+.history {
   min-height: calc(100vh - 76px);
-}
-</style>
+}</style>
