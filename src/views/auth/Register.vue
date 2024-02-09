@@ -59,6 +59,8 @@ const handleRegister = () => {
   } catch (error) {
     console.error("Internal Server Error");
     loading.value = false;
+    const toast = new Toast(document.getElementById('errorToast'))
+  toast.show()
   }
 };
 
@@ -156,9 +158,26 @@ const success = () => {
       </div>
     </div>
   </section>
+  <!-- Error Toast -->
+  <div class="error_toast position-fixed">
+    <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          Something went wrong, please try again.
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
 </template>
 <style lang="scss" scoped>
 .register {
   min-height: 100vh;
+  .error_toast{
+  top: 13%;
+  right: 1%;
+}
 }
 </style>

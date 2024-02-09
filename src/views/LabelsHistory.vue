@@ -50,12 +50,12 @@ const getOrderHistory = async () => {
                 <td>USPS Priority Shippo</td>
                 <td>{{ order.sender_name }}</td>
                 <td>{{ order.receiver_name }}</td>
-                <td>123456789</td>
+                <td><small>{{ order.tracking_number }}</small></td>
                 <td>$5.00</td>
                 <td><span class="badge bg-success">Success</span></td>
                 <td><small>{{ new Date(order.createdAt).toLocaleDateString() }}, {{ new
                   Date(order.createdAt).toLocaleTimeString() }}</small></td>
-                <td> <button class="btn btn-primary"><i class="bi bi-download"></i> PDF</button></td>
+                <td> <a :href="order.pdf" target="_blank" class="btn btn-primary"><i class="bi bi-download"></i> PDF</a></td>
               </tr>
               <tr v-if="orderHistory.length === 0" class="align-middle">
                 <td class="text-center" colspan="8">No data Found</td>

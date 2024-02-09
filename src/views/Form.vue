@@ -1,11 +1,17 @@
 <script setup>
 import Api from "@/assets/js/Api"
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { Modal, Toast } from 'bootstrap'
+import { useStore } from "vuex";
 
 const loading = ref(false);
 const pdfLink = ref("");
+const store = useStore()
+const userId = store.state.user.id
+const trackingNumber = ref('')
+
 const data = ref({
-  userId: 1,
+  userId: userId,
   weight: "",
   sender_name: "",
   sender_company: "",
@@ -47,50 +53,105 @@ const validation_message = ref({
 
 const submitData = () => {
   loading.value = true;
-  Api.post("order-label", data.value)
-    .then((res) => {
-      console.log(res.data);
-      if (res.data.error) {
-        validation_message.value = res.data.validation_message;
-        let fieldNames = Object.keys(res.data.validation_message);
-        fieldNames.forEach((field) => {
-          let inputFields = document.getElementById(field);
-          inputFields.classList.add("is-invalid");
-          let firstInputField = document.getElementById(fieldNames[0]);
-          firstInputField.focus();
-          inputFields.addEventListener("input", () => {
-            if (inputFields.value.trim() !== "") {
-              inputFields.classList.remove("is-invalid");
-            } else {
-              inputFields.classList.add("is-invalid");
-            }
+  try {
+    Api.post("order-label", data.value)
+      .then((res) => {
+        if (res.data.error) {
+          validation_message.value = res.data.validation_message;
+          let fieldNames = Object.keys(res.data.validation_message);
+          fieldNames.forEach((field) => {
+            let inputFields = document.getElementById(field);
+            inputFields.classList.add("is-invalid");
+            let firstInputField = document.getElementById(fieldNames[0]);
+            firstInputField.focus();
+            inputFields.addEventListener("input", () => {
+              if (inputFields.value.trim() !== "") {
+                inputFields.classList.remove("is-invalid");
+              } else {
+                inputFields.classList.add("is-invalid");
+              }
+            });
           });
-        });
-        loading.value = false;
-        return;
-      }
-      // pdfLink.value = res.data.pdf;
-    })
-  // .then(async () => {
-  //   try {
-  //     const response = await fetch(pdfLink.value);
-  //     const pdfName = pdfLink.value.split("/").pop();
-  //     const blob = await response.blob();
-  //     const url = window.URL.createObjectURL(blob);
-  //     const a = document.createElement("a");
-  //     a.href = url;
-  //     a.download = pdfName;
-  //     document.body.appendChild(a);
-  //     a.click();
-  //     document.body.removeChild(a);
-  //     window.URL.revokeObjectURL(url);
-  //   } catch (error) {
-  //     console.error("Error downloading PDF:", error);
-  //   }
-
-  //   loading.value = false;
-  // });
+          loading.value = false;
+          return;
+        } else {
+          pdfLink.value = res.data.pdf;
+          trackingNumber.value = res.data.tracking_number
+          downloadPDF();
+          success();
+          loading.value = false;
+          const modal = new Modal(document.getElementById('successModal'));
+          modal.show();
+        }
+      })
+  } catch (error) {
+    console.log('Server Error', error);
+    loading.value = false
+    const toast = new Toast(document.getElementById('errorToast'))
+    toast.show()
+  }
 };
+
+const downloadPDF = async () => {
+  try {
+    const response = await fetch(pdfLink.value);
+    const pdfName = pdfLink.value.split("/").pop();
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = pdfName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Error downloading PDF:", error);
+  }
+}
+
+const success = () => {
+  data.value = {
+    userId: userId,
+    weight: "",
+    sender_name: "",
+    sender_company: "",
+    sender_street: "",
+    sender_street_2: "",
+    sender_zip: "",
+    sender_state: "",
+    sender_city: "",
+    sender_country: "",
+    receiver_name: "",
+    receiver_company: "",
+    receiver_street: "",
+    receiver_street_2: "",
+    receiver_zip: "",
+    receiver_state: "",
+    receiver_city: "",
+    receiver_country: "",
+  }
+
+  validation_message.value = {
+    weight: "",
+    sender_name: "",
+    sender_company: "",
+    sender_street: "",
+    sender_street_2: "",
+    sender_zip: "",
+    sender_state: "",
+    sender_city: "",
+    sender_country: "",
+    receiver_name: "",
+    receiver_company: "",
+    receiver_street: "",
+    receiver_street_2: "",
+    receiver_zip: "",
+    receiver_state: "",
+    receiver_city: "",
+    receiver_country: "",
+  };
+}
 
 </script>
 <template>
@@ -1254,11 +1315,56 @@ const submitData = () => {
           <div class="text-center">
             <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded" @click="submitData" id="generate-btn"
               :disabled="loading">
-              {{ loading ? "Please wait" : "Generate Label" }}
+              <div class="d-flex align-items-center">
+                <div class="spinner-border me-3" role="status" v-if="loading">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <span>
+                  {{ loading ? "Please wait" : "Order Label" }}
+                </span>
+              </div>
             </button>
           </div>
         </div>
       </div>
     </div>
   </div>
-</template>
+
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 font-medium" id="successModalLabel">Label Generated!</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center py-4">
+          <p class="fs-4 mb-1 font-light">Your Label has successfully generated.</p>
+          <p class="mb-1 fs-5 font-medium">Your Tracking number is <br> <span class="font-bold">{{ trackingNumber
+          }}</span></p>
+          <small>If the download hasn't started <a :href="pdfLink" target="_blank">Click here!</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Toast -->
+  <div class="error_toast position-fixed">
+    <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          Something went wrong, please try again.
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
+  </div></template>
+
+<style lang="scss" scoped>
+.error_toast{
+  top: 13%;
+  right: 1%;
+}
+</style>
