@@ -60,7 +60,7 @@ const submitData = () => {
       }
     })
       .then((res) => {
-        if (res.data.error) {
+        if (res.data.validation_message) {
           validation_message.value = res.data.validation_message;
           let fieldNames = Object.keys(res.data.validation_message);
           fieldNames.forEach((field) => {
@@ -78,9 +78,16 @@ const submitData = () => {
           });
           loading.value = false;
           return;
-        } else {
+        }else if(res.data.balance_error){
+          loading.value = false;
+          resetValidation()
+          const balanceModal = new Modal(document.getElementById('insufficientBalanceModal'))
+          balanceModal.show()
+          return;
+        }else {
           pdfLink.value = res.data.pdf;
           trackingNumber.value = res.data.tracking_number
+          resetValidation()
           downloadPDF();
           success();
           loading.value = false;
@@ -135,7 +142,9 @@ const success = () => {
     receiver_city: "",
     receiver_country: "",
   }
+}
 
+const resetValidation = () => {
   validation_message.value = {
     weight: "",
     sender_name: "",
@@ -155,6 +164,11 @@ const success = () => {
     receiver_city: "",
     receiver_country: "",
   };
+}
+
+const hideBalanceModal = () => {
+  const balanceModal = Modal.getInstance(document.getElementById('insufficientBalanceModal'))
+  balanceModal.hide()
 }
 
 </script>
@@ -1347,6 +1361,22 @@ const success = () => {
           <p class="mb-1 fs-5 font-medium">Your Tracking number is <br> <span class="font-bold">{{ trackingNumber
           }}</span></p>
           <small>If the download hasn't started <a :href="pdfLink" target="_blank">Click here!</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Insufficient Balance Modal -->
+   <div class="modal fade" id="insufficientBalanceModal" tabindex="-1" aria-labelledby="insufficientBalanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 font-medium" id="insufficientBalanceModalLabel">Insufficient Balance!</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center py-4">
+          <p class="fs-4 mb-1 font-light">You have insufficient balance. Please recharge your account.</p>
+          <p class="mb-1 fs-5 font-light"><router-link to="/wallet" @click="hideBalanceModal">Click here</router-link> to recharge your account</p>
         </div>
       </div>
     </div>
