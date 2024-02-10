@@ -20,6 +20,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/wallet",
+      name: "wallet",
+      component: () => import("../views/Wallet.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/register",
       name: "register",
       component: () => import("../views/auth/Register.vue"),

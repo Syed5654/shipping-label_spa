@@ -3,6 +3,7 @@ import Api from "@/assets/js/Api";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { Toast } from 'bootstrap'
 
 const router = useRouter();
 const store = useStore();
@@ -23,8 +24,8 @@ onMounted(()=> {
 })
 
 const handleLogin = () => {
-  loading.value = true;
   try {
+    loading.value = true;
     Api.post("login", data.value).then((res) => {
       if (res.data.error) {
         validation_message.value = res.data.validation_message;
@@ -55,10 +56,10 @@ const handleLogin = () => {
       }
     });
   } catch (error) {
-    console.error("Internal Server Error");
     loading.value = false;
     const toast = new Toast(document.getElementById('errorToast'))
     toast.show()
+    console.error("Internal Server Error");
   }
 };
 

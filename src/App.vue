@@ -46,7 +46,7 @@ const validateUser = async () => {
     localStorage.removeItem('user')
     loading.value = false
     router.push("/login");
-    console.error("Internal Server Error");
+    console.error("Internal Server Error", error);
   }
 };
 </script>

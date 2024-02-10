@@ -1,6 +1,6 @@
 <script setup>
 import Api from "@/assets/js/Api"
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { Modal, Toast } from 'bootstrap'
 import { useStore } from "vuex";
 
@@ -54,7 +54,11 @@ const validation_message = ref({
 const submitData = () => {
   loading.value = true;
   try {
-    Api.post("order-label", data.value)
+    Api.post("order-label", data.value, {
+      headers: {
+        Authorization: `Bearer ${store.state.user.accessToken}`
+      }
+    })
       .then((res) => {
         if (res.data.error) {
           validation_message.value = res.data.validation_message;
@@ -85,7 +89,7 @@ const submitData = () => {
         }
       })
   } catch (error) {
-    console.log('Server Error', error);
+    console.log('Internal Server Error', error);
     loading.value = false
     const toast = new Toast(document.getElementById('errorToast'))
     toast.show()
