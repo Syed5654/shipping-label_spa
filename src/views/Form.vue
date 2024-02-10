@@ -61,6 +61,7 @@ const submitData = () => {
     })
       .then((res) => {
         if (res.data.validation_message) {
+          loading.value = false;
           validation_message.value = res.data.validation_message;
           let fieldNames = Object.keys(res.data.validation_message);
           fieldNames.forEach((field) => {
@@ -76,15 +77,14 @@ const submitData = () => {
               }
             });
           });
-          loading.value = false;
           return;
-        }else if(res.data.balance_error){
+        } else if (res.data.balance_error) {
           loading.value = false;
           resetValidation()
           const balanceModal = new Modal(document.getElementById('insufficientBalanceModal'))
           balanceModal.show()
           return;
-        }else {
+        } else {
           pdfLink.value = res.data.pdf;
           trackingNumber.value = res.data.tracking_number
           resetValidation()
@@ -1366,8 +1366,9 @@ const hideBalanceModal = () => {
     </div>
   </div>
 
-   <!-- Insufficient Balance Modal -->
-   <div class="modal fade" id="insufficientBalanceModal" tabindex="-1" aria-labelledby="insufficientBalanceModalLabel" aria-hidden="true">
+  <!-- Insufficient Balance Modal -->
+  <div class="modal fade" id="insufficientBalanceModal" tabindex="-1" aria-labelledby="insufficientBalanceModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -1376,7 +1377,8 @@ const hideBalanceModal = () => {
         </div>
         <div class="modal-body text-center py-4">
           <p class="fs-4 mb-1 font-light">You have insufficient balance. Please recharge your account.</p>
-          <p class="mb-1 fs-5 font-light"><router-link to="/wallet" @click="hideBalanceModal">Click here</router-link> to recharge your account</p>
+          <p class="mb-1 fs-5 font-light"><router-link to="/wallet" @click="hideBalanceModal">Click here</router-link> to
+            recharge your account</p>
         </div>
       </div>
     </div>
@@ -1394,11 +1396,24 @@ const hideBalanceModal = () => {
           aria-label="Close"></button>
       </div>
     </div>
-  </div></template>
+  </div>
+
+
+  <!-- Loader -->
+  <div
+    class="loader bg-dark bg-opacity-75 text-white position-fixed top-0 left-0 vh-100 w-100 d-flex align-items-center justify-content-center"
+    v-if="loading">
+    <div class="text-center">
+      <div class="spinner-border mb-2" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h5>Please wait! <br> This may take some time</h5>
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
-.error_toast{
+.error_toast {
   top: 13%;
   right: 1%;
-}
-</style>
+}</style>

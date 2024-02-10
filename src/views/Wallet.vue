@@ -2,6 +2,10 @@
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import Api from '@/assets/js/Api';
+import { Toast } from 'bootstrap'
+import { useRoute } from "vue-router";
+
+const route = useRoute()
 const store = useStore()
 const data = ref({
   userId: store.state.user.id,
@@ -14,8 +18,17 @@ const validation_message = ref({
 const balance = ref(0.00)
 const loading = ref(false)
 
-onMounted(()=>{
+onMounted(() => {
   getUserBalance()
+
+  if (route.query.payment === 'success') {
+    const successToast = new Toast(document.getElementById('successPayment'))
+    successToast.show()
+  }
+  if (route.query.payment === 'failed') {
+    const errorToast = new Toast(document.getElementById('paymentError'))
+    errorToast.show()
+  }
 })
 
 const topUpBalance = async () => {
@@ -60,12 +73,12 @@ const topUpBalance = async () => {
 
 const getUserBalance = async () => {
   try {
-    await Api.post('get-balance', {userId: data.value.userId}, {
+    await Api.post('get-balance', { userId: data.value.userId }, {
       headers: {
         Authorization: `Bearer ${store.state.user.accessToken}`
       }
-    }).then((res)=> {
-      if(!res.data.error){
+    }).then((res) => {
+      if (!res.data.error) {
         balance.value = Number(res.data.balance).toFixed(2);
       }
     })
@@ -105,9 +118,12 @@ const success = () => {
               <h2 class="font-medium mb-3 fs-4">Topup Balance</h2>
               <div class="row mb-4">
                 <div class="col-lg-6 col-md-10">
-                  <label for="amount" class="form-label">Topup Amount</label>
-                  <input type="number" class="form-control" id="amount" placeholder="Please enter your amount for topup"
-                    min="0" v-model="data.amount" />
+                  <label for="amount" class="form-label">Topup Amount <span>($)</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number" class="form-control" id="amount" placeholder="Please enter your amount for topup" min="0" v-model="data.amount" >
+                    <span class="input-group-text">.00</span>
+                  </div>
                   <small class="text-danger" v-for="message of validation_message.amount" :key="`${message}-amount`">{{
                     message }}</small>
                 </div>
@@ -121,11 +137,37 @@ const success = () => {
         </div>
       </div>
     </div>
+    <!-- Success Toast -->
+    <div class="payment_toast position-fixed">
+      <div id="successPayment" class="toast align-items-center text-bg-success border-0" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            Payment Successful.
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+    <!-- Error Toast -->
+    <div class="payment_toast position-fixed">
+      <div id="paymentError" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            Payment Failed! Please try again.
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .wallet {
-  min-height: 100vh;
+  min-height: calc(100vh - 76px);
 
   .topup-btn {
     width: 50%;
@@ -133,6 +175,11 @@ const success = () => {
     @media screen and (max-width: 800px) {
       width: 100%;
     }
+  }
+
+  .payment_toast {
+    top: 13%;
+    right: 1%;
   }
 }
 </style>
