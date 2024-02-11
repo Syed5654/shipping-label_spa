@@ -51,7 +51,7 @@ const getOrderHistory = async () => {
                 <td>{{ order.sender_name }}</td>
                 <td>{{ order.receiver_name }}</td>
                 <td><small>{{ order.tracking_number }}</small></td>
-                <td>$5.00</td>
+                <td>${{Number( order.label_price).toFixed(2) }}</td>
                 <td><span class="badge bg-success">Success</span></td>
                 <td><small>{{ new Date(order.createdAt).toLocaleDateString() }}, {{ new
                   Date(order.createdAt).toLocaleTimeString() }}</small></td>
