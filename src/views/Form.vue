@@ -281,7 +281,8 @@ const validatePromoCode = () => {
                 <div class="col-12 mb-3">
                   <div class="d-flex align-items-center gap-2">
                     <p class="mb-0 fs-5 font-light">Label Price:</p>
-                    <p class="mb-0 fs-5">{{reducePrice? "$4.00" : "$5.00"}}</p>
+                    <p class="mb-0 fs-5" v-if="data.weight < 40">{{reducePrice? "$4.00" : "$5.00"}}</p>
+                    <p class="mb-0 fs-5" v-else>{{reducePrice? "$9.00" : "$10.00"}}</p>
                   </div>
                 </div>
                 <div class="col-md-6">
