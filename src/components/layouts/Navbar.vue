@@ -16,7 +16,7 @@ const logOut = () => {
     <div class="container">
       <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between w-100">
         <div>
-          <router-link to="/" class="fs-1 fst-italic font-bold text-primary text-decoration-none">Logo.</router-link>
+          <router-link to="/" class="fs-3 fst-italic font-bold text-primary text-decoration-none">Ecomfulfil.</router-link>
         </div>
         <div class="d-flex align-items-center">
           <router-link to="/" class="text-white text-decoration-none me-4 font-medium">Generate Label</router-link>

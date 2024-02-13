@@ -82,7 +82,7 @@ const success = () => {
           <div class="card border-0 shadow p-2 p-sm-5 rounded-4">
             <div class="card-body">
               <div class="text-center mb-4">
-                <h1 class="fst-italic font-bold text-primary mb-2">Logo.</h1>
+                <h2 class="fst-italic font-bold text-primary mb-2">Ecomfulfil.</h2>
                 <h4>Login to your Shippo account.</h4>
               </div>
               <div class="w-100 mb-3">
