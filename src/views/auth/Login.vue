@@ -79,7 +79,7 @@ const success = () => {
     <div class="container">
       <div class="row w-100 justify-content-center">
         <div class="col-lg-6">
-          <div class="card border-0 shadow p-5 rounded-4">
+          <div class="card border-0 shadow p-2 p-sm-5 rounded-4">
             <div class="card-body">
               <div class="text-center mb-4">
                 <h1 class="fst-italic font-bold text-primary mb-2">Logo.</h1>
