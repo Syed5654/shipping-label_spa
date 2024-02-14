@@ -315,6 +315,42 @@ const validatePromoCode = () => {
               </div>
             </div>
           </div>
+          <div class="card mb-4">
+            <div class="card-header bg-secondary">
+              <h4 class="text-primary mb-0">Dimensions</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                      <label for="length" class="form-label">Length (in)</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="length"
+                        placeholder="0.00 in"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="width" class="form-label">Width (in)</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="width"
+                        placeholder="0.00 in"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="height" class="form-label">Height (in)</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="height"
+                        placeholder="0.00 in"
+                      />
+                    </div>
+              </div>
+            </div>
+          </div>
           <div class="row mb-3">
             <div class="col-md-6">
               <div class="card mb-4">

@@ -89,7 +89,7 @@ const success = () => {
             <div class="card-body">
               <div class="text-center mb-4">
                 <h2 class="fst-italic font-bold text-primary mb-2">Ecomfulfil.</h2>
-                <h4>Create your account in Shippo.</h4>
+                <h4>Create your account.</h4>
               </div>
               <div class="w-100 mb-3">
                 <label for="name" class="form-label">Full name</label>
