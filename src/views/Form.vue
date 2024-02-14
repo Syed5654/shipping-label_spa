@@ -219,6 +219,18 @@ const validatePromoCode = () => {
     promoCodeError.value = "";
   }
 };
+
+const allowOnlyNumberSenderZip = (event) => {
+  if(event.code !== 'Digit0' && event.code !== 'Digit1' && event.code !== 'Digit2'&& event.code !== 'Digit3' && event.code !== 'Digit4' && event.code !== 'Digit5' && event.code !== 'Digit6' && event.code !== 'Digit7' && event.code !== 'Digit8' && event.code !== 'Digit9' && event.code !== 'Minus' && event.code !== 'Backspace' && event.code !== 'ArrowUp' && event.code !== 'ArrowDown' && event.code !== 'ArrowRight' && event.code !== 'ArrowLeft'){
+    event.preventDefault();
+  }
+}
+
+const allowOnlyNumberReceiverZip = (event) => {
+  if(event.code !== 'Digit0' && event.code !== 'Digit1' && event.code !== 'Digit2'&& event.code !== 'Digit3' && event.code !== 'Digit4' && event.code !== 'Digit5' && event.code !== 'Digit6' && event.code !== 'Digit7' && event.code !== 'Digit8' && event.code !== 'Digit9' && event.code !== 'Minus' && event.code !== 'Backspace' && event.code !== 'ArrowUp' && event.code !== 'ArrowDown' && event.code !== 'ArrowRight' && event.code !== 'ArrowLeft'){
+    event.preventDefault();
+  }
+}
 </script>
 <template>
   <div class="py-5 bg-light">
@@ -426,11 +438,12 @@ const validatePromoCode = () => {
                     <div class="col-md-6 mb-3">
                       <label for="sender_zip" class="form-label">Zip</label>
                       <input
-                        type="number"
+                        type="text"
                         class="form-control"
                         id="sender_zip"
                         placeholder="Zip"
                         v-model="data.sender_zip"
+                        @keydown="allowOnlyNumberSenderZip"
                       />
                       <small
                         class="text-danger"
@@ -836,11 +849,12 @@ const validatePromoCode = () => {
                     <div class="col-md-6 mb-3">
                       <label for="receiver_zip" class="form-label">Zip</label>
                       <input
-                        type="number"
+                        type="text"
                         class="form-control"
                         id="receiver_zip"
                         placeholder="Zip"
                         v-model="data.receiver_zip"
+                        @keydown="allowOnlyNumberReceiverZip"
                       />
                       <small
                         class="text-danger"
