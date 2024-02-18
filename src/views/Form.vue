@@ -60,55 +60,55 @@ const submitData = () => {
   loading.value = true;
   if (validPromoCode.value) {
     try {
-        Api.post("order-label", data.value, {
-          headers: {
-            Authorization: `Bearer ${store.state.user.accessToken}`,
-          },
-        }).then((res) => {
-          if (res.data.validation_message) {
-            loading.value = false;
-            validation_message.value = res.data.validation_message;
-            let fieldNames = Object.keys(res.data.validation_message);
-            fieldNames.forEach((field) => {
-              let inputFields = document.getElementById(field);
-              inputFields.classList.add("is-invalid");
-              let firstInputField = document.getElementById(fieldNames[0]);
-              firstInputField.focus();
-              inputFields.addEventListener("input", () => {
-                if (inputFields.value.trim() !== "") {
-                  inputFields.classList.remove("is-invalid");
-                } else {
-                  inputFields.classList.add("is-invalid");
-                }
-              });
+      Api.post("order-label", data.value, {
+        headers: {
+          Authorization: `Bearer ${store.state.user.accessToken}`,
+        },
+      }).then((res) => {
+        if (res.data.validation_message) {
+          loading.value = false;
+          validation_message.value = res.data.validation_message;
+          let fieldNames = Object.keys(res.data.validation_message);
+          fieldNames.forEach((field) => {
+            let inputFields = document.getElementById(field);
+            inputFields.classList.add("is-invalid");
+            let firstInputField = document.getElementById(fieldNames[0]);
+            firstInputField.focus();
+            inputFields.addEventListener("input", () => {
+              if (inputFields.value.trim() !== "") {
+                inputFields.classList.remove("is-invalid");
+              } else {
+                inputFields.classList.add("is-invalid");
+              }
             });
-            return;
-          } else if (res.data.balance_error) {
-            loading.value = false;
-            resetValidation();
-            const balanceModal = new Modal(
-              document.getElementById("insufficientBalanceModal")
-            );
-            balanceModal.show();
-            return;
-          } else {
-            pdfLink.value = res.data.pdf;
-            trackingNumber.value = res.data.tracking_number;
-            resetValidation();
-            downloadPDF();
-            success();
-            loading.value = false;
-            const modal = new Modal(document.getElementById("successModal"));
-            modal.show();
-          }
-        });
+          });
+          return;
+        } else if (res.data.balance_error) {
+          loading.value = false;
+          resetValidation();
+          const balanceModal = new Modal(
+            document.getElementById("insufficientBalanceModal")
+          );
+          balanceModal.show();
+          return;
+        } else {
+          pdfLink.value = res.data.pdf;
+          trackingNumber.value = res.data.tracking_number;
+          resetValidation();
+          downloadPDF();
+          success();
+          loading.value = false;
+          const modal = new Modal(document.getElementById("successModal"));
+          modal.show();
+        }
+      });
     } catch (error) {
       console.log("Internal Server Error", error);
       loading.value = false;
       const toast = new Toast(document.getElementById("errorToast"));
       toast.show();
     }
-  }else{
+  } else {
     loading.value = false;
     document.getElementById("promo_code").focus()
   }
@@ -153,6 +153,12 @@ const success = () => {
     receiver_city: "",
     receiver_country: "",
   };
+
+  dimensions.value = {
+    height: '',
+    length: '',
+    width: ''
+  }
 };
 
 const resetValidation = () => {
@@ -176,6 +182,12 @@ const resetValidation = () => {
     receiver_country: "",
   };
 };
+
+const dimensions = ref({
+  height: '',
+  length: '',
+  width: ''
+})
 
 const hideBalanceModal = () => {
   const balanceModal = Modal.getInstance(
@@ -221,13 +233,13 @@ const validatePromoCode = () => {
 };
 
 const allowOnlyNumberSenderZip = (event) => {
-  if(event.code !== 'Digit0' && event.code !== 'Digit1' && event.code !== 'Digit2'&& event.code !== 'Digit3' && event.code !== 'Digit4' && event.code !== 'Digit5' && event.code !== 'Digit6' && event.code !== 'Digit7' && event.code !== 'Digit8' && event.code !== 'Digit9' && event.code !== 'Minus' && event.code !== 'Backspace' && event.code !== 'ArrowUp' && event.code !== 'ArrowDown' && event.code !== 'ArrowRight' && event.code !== 'ArrowLeft'){
+  if (event.code !== 'Digit0' && event.code !== 'Digit1' && event.code !== 'Digit2' && event.code !== 'Digit3' && event.code !== 'Digit4' && event.code !== 'Digit5' && event.code !== 'Digit6' && event.code !== 'Digit7' && event.code !== 'Digit8' && event.code !== 'Digit9' && event.code !== 'Minus' && event.code !== 'Backspace' && event.code !== 'ArrowUp' && event.code !== 'ArrowDown' && event.code !== 'ArrowRight' && event.code !== 'ArrowLeft') {
     event.preventDefault();
   }
 }
 
 const allowOnlyNumberReceiverZip = (event) => {
-  if(event.code !== 'Digit0' && event.code !== 'Digit1' && event.code !== 'Digit2'&& event.code !== 'Digit3' && event.code !== 'Digit4' && event.code !== 'Digit5' && event.code !== 'Digit6' && event.code !== 'Digit7' && event.code !== 'Digit8' && event.code !== 'Digit9' && event.code !== 'Minus' && event.code !== 'Backspace' && event.code !== 'ArrowUp' && event.code !== 'ArrowDown' && event.code !== 'ArrowRight' && event.code !== 'ArrowLeft'){
+  if (event.code !== 'Digit0' && event.code !== 'Digit1' && event.code !== 'Digit2' && event.code !== 'Digit3' && event.code !== 'Digit4' && event.code !== 'Digit5' && event.code !== 'Digit6' && event.code !== 'Digit7' && event.code !== 'Digit8' && event.code !== 'Digit9' && event.code !== 'Minus' && event.code !== 'Backspace' && event.code !== 'ArrowUp' && event.code !== 'ArrowDown' && event.code !== 'ArrowRight' && event.code !== 'ArrowLeft') {
     event.preventDefault();
   }
 }
@@ -247,79 +259,40 @@ const allowOnlyNumberReceiverZip = (event) => {
             <div class="card-body">
               <div class="row">
                 <div class="col-12 mb-3">
-                  <label for="weight" class="form-label mb-2"
-                    >Available Courier:</label
-                  >
+                  <label for="weight" class="form-label mb-2">Available Courier:</label>
                   <br />
-                  <div
-                    class="d-inline-block border border-2 border-success rounded-4 p-3 position-relative"
-                  >
-                    <span
-                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success"
-                    >
+                  <div class="d-inline-block border border-2 border-success rounded-4 p-3 position-relative">
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
                       <i class="bi bi-check-lg fs-6"></i>
                     </span>
-                    <img
-                      src="@/assets/img/usps.svg"
-                      alt="USPS"
-                      class="img-fluid"
-                      width="100"
-                    />
+                    <img src="@/assets/img/usps.svg" alt="USPS" class="img-fluid" width="100" />
                   </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="weight" class="form-label fs-5"
-                    >Weight
-                    <span class="text-black-50 fst-italic"
-                      >(70.00 lbs max)</span
-                    ></label
-                  >
-                  <input
-                    type="number"
-                    min="0"
-                    max="70"
-                    class="form-control"
-                    id="weight"
-                    placeholder="0 lbs"
-                    v-model="data.weight"
-                  />
-                  <small
-                    class="text-danger"
-                    v-for="message of validation_message.weight"
-                    :key="`${message}-weight`"
-                    >{{ message }}</small
-                  >
+                  <label for="weight" class="form-label fs-5">Weight
+                    <span class="text-black-50 fst-italic">(70.00 lbs max)</span></label>
+                  <input type="number" min="0" max="70" class="form-control" id="weight" placeholder="0 lbs"
+                    v-model="data.weight" />
+                  <small class="text-danger" v-for="message of validation_message.weight" :key="`${message}-weight`">{{
+                    message }}</small>
                 </div>
                 <div class="col-12 mb-3">
                   <div class="d-flex align-items-center gap-2">
                     <p class="mb-0 fs-5 font-light">Label Price:</p>
-                    <p class="mb-0 fs-5" v-if="data.weight < 30">{{reducePrice? "$4.00" : "$5.00"}}</p>
-                    <p class="mb-0 fs-5" v-else>{{reducePrice? "$4.00" : "$10.00"}}</p>
+                    <p class="mb-0 fs-5" v-if="data.weight < 30">{{ reducePrice ? "$4.00" : "$5.00" }}</p>
+                    <p class="mb-0 fs-5" v-else>{{ reducePrice ? "$4.00" : "$10.00" }}</p>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="d-flex align-items-center mb-2">
-                    <label for="promo_code" class="form-label me-3 mb-0"
-                      >PromoCode
-                      <span class="text-black-50 fst-italic"
-                        >(Optional)</span
-                      ></label
-                    >
-                    <div
-                      class="spinner-border spinner-border-sm"
-                      role="status"
-                      v-if="promoLoading"
-                    >
+                    <label for="promo_code" class="form-label me-3 mb-0">PromoCode
+                      <span class="text-black-50 fst-italic">(Optional)</span></label>
+                    <div class="spinner-border spinner-border-sm" role="status" v-if="promoLoading">
                       <span class="visually-hidden">Loading...</span>
                     </div>
                   </div>
-                  <input
-                    type="text"
-                    class="form-control text-uppercase"
-                    id="promo_code"
-                    v-model="data.promo_code"
-                    @input="validatePromoCode"
-                  />
+                  <input type="text" class="form-control text-uppercase" id="promo_code" v-model="data.promo_code"
+                    @input="validatePromoCode" />
                   <small class="text-danger" v-if="promoCodeError">{{
                     promoCodeError
                   }}</small>
@@ -334,32 +307,19 @@ const allowOnlyNumberReceiverZip = (event) => {
             <div class="card-body">
               <div class="row">
                 <div class="col-md-6 mb-3">
-                      <label for="length" class="form-label">Length (in)</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="length"
-                        placeholder="0.00 in"
-                      />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="width" class="form-label">Width (in)</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="width"
-                        placeholder="0.00 in"
-                      />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="height" class="form-label">Height (in)</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        id="height"
-                        placeholder="0.00 in"
-                      />
-                    </div>
+                  <label for="length" class="form-label">Length (in)</label>
+                  <input type="number" class="form-control" id="length" placeholder="0.00 in"
+                    v-model="dimensions.length" />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="width" class="form-label">Width (in)</label>
+                  <input type="number" class="form-control" id="width" placeholder="0.00 in" v-model="dimensions.width" />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="height" class="form-label">Height (in)</label>
+                  <input type="number" class="form-control" id="height" placeholder="0.00 in"
+                    v-model="dimensions.height" />
+                </div>
               </div>
             </div>
           </div>
@@ -373,92 +333,41 @@ const allowOnlyNumberReceiverZip = (event) => {
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="sender_name" class="form-label">Name</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="sender_name"
-                        placeholder="Name"
-                        v-model="data.sender_name"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.sender_name"
-                        :key="`${message}-sender_name`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="sender_name" placeholder="Name"
+                        v-model="data.sender_name" />
+                      <small class="text-danger" v-for="message of validation_message.sender_name"
+                        :key="`${message}-sender_name`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="sender_company" class="form-label"
-                        >Company
-                        <span class="text-black-50 fst-italic"
-                          >(Optional)</span
-                        ></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="sender_company"
-                        placeholder="Company"
-                        v-model="data.sender_company"
-                      />
+                      <label for="sender_company" class="form-label">Company
+                        <span class="text-black-50 fst-italic">(Optional)</span></label>
+                      <input type="text" class="form-control" id="sender_company" placeholder="Company"
+                        v-model="data.sender_company" />
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="sender_street" class="form-label"
-                        >Street
+                      <label for="sender_street" class="form-label">Street
                       </label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="sender_street"
-                        placeholder="Street"
-                        v-model="data.sender_street"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.sender_street"
-                        :key="`${message}-sender_street`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="sender_street" placeholder="Street"
+                        v-model="data.sender_street" />
+                      <small class="text-danger" v-for="message of validation_message.sender_street"
+                        :key="`${message}-sender_street`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="sender_street_2" class="form-label"
-                        >Street 2
-                        <span class="text-black-50 fst-italic"
-                          >(Optional)</span
-                        ></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="sender_street_2"
-                        placeholder="Street 2"
-                        v-model="data.sender_street_2"
-                      />
+                      <label for="sender_street_2" class="form-label">Street 2
+                        <span class="text-black-50 fst-italic">(Optional)</span></label>
+                      <input type="text" class="form-control" id="sender_street_2" placeholder="Street 2"
+                        v-model="data.sender_street_2" />
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="sender_zip" class="form-label">Zip</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="sender_zip"
-                        placeholder="Zip"
-                        v-model="data.sender_zip"
-                        @keydown="allowOnlyNumberSenderZip"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.sender_zip"
-                        :key="`${message}-sender_zip`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="sender_zip" placeholder="Zip" v-model="data.sender_zip"
+                        @keydown="allowOnlyNumberSenderZip" />
+                      <small class="text-danger" v-for="message of validation_message.sender_zip"
+                        :key="`${message}-sender_zip`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="sender_state" class="form-label">State</label>
-                      <select
-                        class="form-select"
-                        id="sender_state"
-                        v-model="data.sender_state"
-                      >
+                      <select class="form-select" id="sender_state" v-model="data.sender_state">
                         <option selected disabled>Select State</option>
                         <option value="AK">Alaska (AK)</option>
                         <option value="AL">Alabama (AL)</option>
@@ -529,38 +438,19 @@ const allowOnlyNumberReceiverZip = (event) => {
                         <option value="SK">Saskatchewan (SK)</option>
                         <option value="YT">Yukon (YT)</option>
                       </select>
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.sender_state"
-                        :key="`${message}-sender_state`"
-                        >{{ message }}</small
-                      >
+                      <small class="text-danger" v-for="message of validation_message.sender_state"
+                        :key="`${message}-sender_state`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="sender_city" class="form-label">City</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="sender_city"
-                        placeholder="City"
-                        v-model="data.sender_city"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.sender_city"
-                        :key="`${message}-sender_city`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="sender_city" placeholder="City"
+                        v-model="data.sender_city" />
+                      <small class="text-danger" v-for="message of validation_message.sender_city"
+                        :key="`${message}-sender_city`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="sender_country" class="form-label"
-                        >Country</label
-                      >
-                      <select
-                        class="form-select"
-                        id="sender_country"
-                        v-model="data.sender_country"
-                      >
+                      <label for="sender_country" class="form-label">Country</label>
+                      <select class="form-select" id="sender_country" v-model="data.sender_country">
                         <option selected disabled>Select a country</option>
                         <option value="AF">Afghanistan</option>
                         <option value="AL">Albania</option>
@@ -764,12 +654,8 @@ const allowOnlyNumberReceiverZip = (event) => {
                         <option value="ZM">Zambia</option>
                         <option value="ZW">Zimbabwe</option>
                       </select>
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.sender_country"
-                        :key="`${message}-sender_country`"
-                        >{{ message }}</small
-                      >
+                      <small class="text-danger" v-for="message of validation_message.sender_country"
+                        :key="`${message}-sender_country`">{{ message }}</small>
                     </div>
                   </div>
                 </div>
@@ -784,94 +670,41 @@ const allowOnlyNumberReceiverZip = (event) => {
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="receiver_name" class="form-label">Name</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="receiver_name"
-                        placeholder="Name"
-                        v-model="data.receiver_name"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.receiver_name"
-                        :key="`${message}-receiver_name`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="receiver_name" placeholder="Name"
+                        v-model="data.receiver_name" />
+                      <small class="text-danger" v-for="message of validation_message.receiver_name"
+                        :key="`${message}-receiver_name`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="receiver_company" class="form-label"
-                        >Company
-                        <span class="text-black-50 fst-italic"
-                          >(Optional)</span
-                        ></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="receiver_company"
-                        placeholder="Company"
-                        v-model="data.receiver_company"
-                      />
+                      <label for="receiver_company" class="form-label">Company
+                        <span class="text-black-50 fst-italic">(Optional)</span></label>
+                      <input type="text" class="form-control" id="receiver_company" placeholder="Company"
+                        v-model="data.receiver_company" />
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="receiver_street" class="form-label"
-                        >Street
+                      <label for="receiver_street" class="form-label">Street
                       </label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="receiver_street"
-                        placeholder="Street"
-                        v-model="data.receiver_street"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.receiver_street"
-                        :key="`${message}-receiver_street`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="receiver_street" placeholder="Street"
+                        v-model="data.receiver_street" />
+                      <small class="text-danger" v-for="message of validation_message.receiver_street"
+                        :key="`${message}-receiver_street`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="receiver_street_2" class="form-label"
-                        >Street 2
-                        <span class="text-black-50 fst-italic"
-                          >(Optional)</span
-                        ></label
-                      >
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="receiver_street_2"
-                        placeholder="Street 2"
-                        v-model="data.receiver_street_2"
-                      />
+                      <label for="receiver_street_2" class="form-label">Street 2
+                        <span class="text-black-50 fst-italic">(Optional)</span></label>
+                      <input type="text" class="form-control" id="receiver_street_2" placeholder="Street 2"
+                        v-model="data.receiver_street_2" />
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="receiver_zip" class="form-label">Zip</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="receiver_zip"
-                        placeholder="Zip"
-                        v-model="data.receiver_zip"
-                        @keydown="allowOnlyNumberReceiverZip"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.receiver_zip"
-                        :key="`${message}-receiver_zip`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="receiver_zip" placeholder="Zip"
+                        v-model="data.receiver_zip" @keydown="allowOnlyNumberReceiverZip" />
+                      <small class="text-danger" v-for="message of validation_message.receiver_zip"
+                        :key="`${message}-receiver_zip`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="receiver_state" class="form-label"
-                        >State</label
-                      >
-                      <select
-                        class="form-select"
-                        id="receiver_state"
-                        v-model="data.receiver_state"
-                      >
+                      <label for="receiver_state" class="form-label">State</label>
+                      <select class="form-select" id="receiver_state" v-model="data.receiver_state">
                         <option selected disabled>Select state...</option>
                         <option value="AK">Alaska (AK)</option>
                         <option value="AL">Alabama (AL)</option>
@@ -942,38 +775,19 @@ const allowOnlyNumberReceiverZip = (event) => {
                         <option value="SK">Saskatchewan (SK)</option>
                         <option value="YT">Yukon (YT)</option>
                       </select>
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.receiver_state"
-                        :key="`${message}-receiver_state`"
-                        >{{ message }}</small
-                      >
+                      <small class="text-danger" v-for="message of validation_message.receiver_state"
+                        :key="`${message}-receiver_state`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="receiver_city" class="form-label">City</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="receiver_city"
-                        placeholder="City"
-                        v-model="data.receiver_city"
-                      />
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.receiver_city"
-                        :key="`${message}-receiver_city`"
-                        >{{ message }}</small
-                      >
+                      <input type="text" class="form-control" id="receiver_city" placeholder="City"
+                        v-model="data.receiver_city" />
+                      <small class="text-danger" v-for="message of validation_message.receiver_city"
+                        :key="`${message}-receiver_city`">{{ message }}</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="receiver_country" class="form-label"
-                        >Country</label
-                      >
-                      <select
-                        class="form-select"
-                        id="receiver_country"
-                        v-model="data.receiver_country"
-                      >
+                      <label for="receiver_country" class="form-label">Country</label>
+                      <select class="form-select" id="receiver_country" v-model="data.receiver_country">
                         <option selected disabled>Select a country</option>
                         <option value="AF">Afghanistan</option>
                         <option value="AL">Albania</option>
@@ -1177,12 +991,8 @@ const allowOnlyNumberReceiverZip = (event) => {
                         <option value="ZM">Zambia</option>
                         <option value="ZW">Zimbabwe</option>
                       </select>
-                      <small
-                        class="text-danger"
-                        v-for="message of validation_message.receiver_country"
-                        :key="`${message}-receiver_country`"
-                        >{{ message }}</small
-                      >
+                      <small class="text-danger" v-for="message of validation_message.receiver_country"
+                        :key="`${message}-receiver_country`">{{ message }}</small>
                     </div>
                   </div>
                 </div>
@@ -1190,12 +1000,8 @@ const allowOnlyNumberReceiverZip = (event) => {
             </div>
           </div>
           <div class="text-center">
-            <button
-              class="btn btn-primary font-bold text-white px-4 fs-5 rounded"
-              @click="submitData"
-              id="generate-btn"
-              :disabled="loading"
-            >
+            <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded" @click="submitData" id="generate-btn"
+              :disabled="loading">
               <div class="d-flex align-items-center">
                 <div class="spinner-border me-3" role="status" v-if="loading">
                   <span class="visually-hidden">Loading...</span>
@@ -1212,25 +1018,14 @@ const allowOnlyNumberReceiverZip = (event) => {
   </div>
 
   <!-- Success Modal -->
-  <div
-    class="modal fade"
-    id="successModal"
-    tabindex="-1"
-    aria-labelledby="successModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5 font-medium" id="successModalLabel">
             Label Generated!
           </h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-center py-4">
           <p class="fs-4 mb-1 font-light">
@@ -1240,47 +1035,30 @@ const allowOnlyNumberReceiverZip = (event) => {
             Your Tracking number is <br />
             <span class="font-bold">{{ trackingNumber }}</span>
           </p>
-          <small
-            >If the download hasn't started
-            <a :href="pdfLink" target="_blank">Click here!</a></small
-          >
+          <small>If the download hasn't started
+            <a :href="pdfLink" target="_blank">Click here!</a></small>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Insufficient Balance Modal -->
-  <div
-    class="modal fade"
-    id="insufficientBalanceModal"
-    tabindex="-1"
-    aria-labelledby="insufficientBalanceModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="insufficientBalanceModal" tabindex="-1" aria-labelledby="insufficientBalanceModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1
-            class="modal-title fs-5 font-medium"
-            id="insufficientBalanceModalLabel"
-          >
+          <h1 class="modal-title fs-5 font-medium" id="insufficientBalanceModalLabel">
             Insufficient Balance!
           </h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body text-center py-4">
           <p class="fs-4 mb-1 font-light">
             You have insufficient balance. Please recharge your account.
           </p>
           <p class="mb-1 fs-5 font-light">
-            <router-link to="/wallet" @click="hideBalanceModal"
-              >Click here</router-link
-            >
+            <router-link to="/wallet" @click="hideBalanceModal">Click here</router-link>
             to recharge your account
           </p>
         </div>
@@ -1290,21 +1068,12 @@ const allowOnlyNumberReceiverZip = (event) => {
 
   <!-- Error Toast -->
   <div class="error_toast position-fixed">
-    <div
-      id="errorToast"
-      class="toast align-items-center text-bg-danger border-0"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
+    <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
       <div class="d-flex">
         <div class="toast-body">Something went wrong, please try again.</div>
-        <button
-          type="button"
-          class="btn-close btn-close-white me-2 m-auto"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
       </div>
     </div>
   </div>
@@ -1312,8 +1081,7 @@ const allowOnlyNumberReceiverZip = (event) => {
   <!-- Loader -->
   <div
     class="loader bg-dark bg-opacity-75 text-white position-fixed top-0 left-0 vh-100 w-100 d-flex align-items-center justify-content-center"
-    v-if="loading"
-  >
+    v-if="loading">
     <div class="text-center">
       <div class="spinner-border mb-2" role="status">
         <span class="visually-hidden">Loading...</span>

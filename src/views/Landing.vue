@@ -15,15 +15,7 @@
         <div class="col-lg-7 mb-3">
           <p class="font-medium text-primary">MISSION AND PHILOSOPHY</p>
           <h3 class="font-bold">OUR MISSION</h3>
-          <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima doloribus distinctio, adipisci provident
-            harum asperiores aut! Quasi voluptatibus ea facere illum, fugit magni illo reiciendis expedita, voluptatem
-            tenetur ad minus nulla. Architecto, ut sint. Corporis provident aperiam fugiat laboriosam necessitatibus!
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur incidunt error totam impedit odio,
-            corporis aliquam. Consequatur sapiente iste earum, quis voluptates minima odio! Molestiae harum aspernatur
-            deleniti reprehenderit libero repellat officia porro laborum quidem doloribus, nobis similique corporis
-            laboriosam ratione maxime saepe, hic placeat tempora. Minima, illum optio, aliquam placeat natus sint
-            molestias eaque molestiae enim sit a porro!</p>
-          <button class="btn btn-primary font-bold px-4 rounded-pill">Learn More</button>
+          <p>At Ecomfulfil, we are dedicated to revolutionizing e-commerce logistics. Our mission is to provide DFY e-commerce service, empowering businesses with seamless fulfillment solutions. Committed to innovation, efficiency, and sustainability, we aim to be the trusted partner that propels business to new heights in the dynamic world of online commerce.</p>
         </div>
       </div>
       <div>
@@ -37,9 +29,7 @@
               <div class="card-body text-center">
                 <img src="@/assets/img/boxes.png" alt="Boxes" width="230" height="230" class=" mb-3">
                 <h5>DFY ECOMMERCE STORES</h5>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate dignissimos veritatis amet
-                  pariatur, nesciunt commodi nihil nulla quae earum quo, necessitatibus debitis. Aperiam sunt voluptates
-                  id, nostrum quia odio in!</p>
+                <p class="font-light mb-4">Whether it is AMAZON, WALMART, ETSY, or TikTok, we help you generate profits with our proven 4-Tier Automation, while you can enjoy a luxurious life.</p>
                   <button class="btn btn-primary font-bold rounded-pill px-5 text-white shadow">Order Service</button>
               </div>
             </div>
@@ -49,9 +39,7 @@
               <div class="card-body text-center">
                 <img src="@/assets/img/truck.png" alt="Deliver" width="230" height="230" class=" mb-3">
                 <h5>FLAT SHIPPING LABELS</h5>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate dignissimos veritatis amet
-                  pariatur, nesciunt commodi nihil nulla quae earum quo, necessitatibus debitis. Aperiam sunt voluptates
-                  id, nostrum quia odio in!</p>
+                <p class="font-light mb-4">We understand the shipping charges eat 30% to 50% of the profit margins hence we are offering $5 flat shipping all over the USA for up to 30 lbs.</p>
                   <router-link to="/generate-label" class="btn btn-primary font-bold rounded-pill px-5 text-white shadow">Order Label</router-link>
               </div>
             </div>
