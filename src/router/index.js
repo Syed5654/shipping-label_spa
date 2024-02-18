@@ -5,6 +5,11 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      name: "home",
+      component: () => import("../views/Landing.vue"),
+    },
+    {
+      path: "/generate-label",
       name: "form",
       component: () => import("../views/Form.vue"),
       meta: {

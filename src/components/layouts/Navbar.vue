@@ -1,10 +1,17 @@
 <script setup>
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 const router = useRouter()
 const store = useStore()
-const userName = store.state.user.name.split(' ')[0]
+const userName = ref('')
+
+onMounted(()=>{
+if(store.state.isLoggedIn){
+  userName.value = store.state.user.name.split(' ')[0]
+}
+})
 
 const logOut = () => {
   localStorage.removeItem('user')
@@ -18,8 +25,8 @@ const logOut = () => {
         <div>
           <router-link to="/" class="fs-3 fst-italic font-bold text-primary text-decoration-none">Ecomfulfil.</router-link>
         </div>
-        <div class="d-flex align-items-center">
-          <router-link to="/" class="text-white text-decoration-none me-4 font-medium">Generate Label</router-link>
+        <div class="d-flex align-items-center" v-if="store.state.isLoggedIn">
+          <router-link to="/generate-label" class="text-white text-decoration-none me-4 font-medium">Generate Label</router-link>
           <router-link to="/history" class="text-white text-decoration-none me-4 font-medium">Order History</router-link>
           <div class="dropdown">
             <a href="javascript:void(0)" class="dropdown-toggle text-white d-flex align-items-center text-decoration-none" role="button" data-bs-toggle="dropdown"
@@ -33,6 +40,9 @@ const logOut = () => {
               <li><button class="dropdown-item d-flex align-items-center" @click="logOut"><i class="bi bi-box-arrow-in-left me-2"></i><span>Logout</span></button></li>
             </ul>
           </div>
+        </div>
+        <div v-else>
+          <router-link to="/login" class="btn btn-light text-dark text-decoration-none me-4 font-medium">Login</router-link>
         </div>
       </div>
     </div>

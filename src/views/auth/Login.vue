@@ -19,7 +19,7 @@ const validation_message = ref({
 
 onMounted(()=> {
   if(store.state.isLoggedIn){
-    router.push('/')
+    router.push('/generate-label')
   }
 })
 
@@ -52,7 +52,7 @@ const handleLogin = () => {
         const user = JSON.stringify(res.data.user)
         localStorage.setItem("user", user);
         success();
-        router.push("/");
+        router.push("/generate-label");
       }
     });
   } catch (error) {

@@ -1,5 +1,6 @@
 <script setup>
 import Navbar from "@/components/layouts/Navbar.vue";
+import Footer from "@/components/layouts/Footer.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { onBeforeMount, ref } from "vue";
@@ -60,5 +61,6 @@ const validateUser = async () => {
   <div v-else>
     <Navbar v-if="route.name && route.name !== 'register' && route.name !== 'login'" />
     <RouterView />
+    <Footer/>
   </div>
 </template>
