@@ -21,7 +21,7 @@ const logOut = () => {
 <template>
   <div class="navbar shadow-sm bg-dark">
     <div class="container">
-      <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between w-100">
+      <div class="d-flex flex-sm-row align-items-center justify-content-between w-100" :class="{'flex-column' : store.state.isLoggedIn}">
         <div>
           <router-link to="/" class="fs-3 fst-italic font-bold text-primary text-decoration-none">Ecomfulfil.</router-link>
         </div>

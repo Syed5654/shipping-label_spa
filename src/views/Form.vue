@@ -1,6 +1,6 @@
 <script setup>
 import Api from "@/assets/js/Api";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Modal, Toast } from "bootstrap";
 import { useStore } from "vuex";
 
@@ -243,6 +243,15 @@ const allowOnlyNumberReceiverZip = (event) => {
     event.preventDefault();
   }
 }
+
+
+onMounted(()=>{
+  window.addEventListener('keydown', (e)=> {
+    if(e.key === 'Enter'){
+      submitData()
+    }
+  })
+})
 </script>
 <template>
   <div class="py-5 bg-light">

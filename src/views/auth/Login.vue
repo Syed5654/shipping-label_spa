@@ -21,6 +21,12 @@ onMounted(()=> {
   if(store.state.isLoggedIn){
     router.push('/generate-label')
   }
+
+  window.addEventListener('keydown', (e)=> {
+    if(e.key === 'Enter'){
+      handleLogin()
+    }
+  })
 })
 
 const handleLogin = () => {
