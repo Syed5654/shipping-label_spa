@@ -3,7 +3,7 @@
     <div class="bg-primary bg-gradient d-flex align-items-center banner mb-5">
       <div class="container">
         <p class="mb-1 font-medium">WELCOME TO THE 2024 NEXT BIG OPPUTUNITY</p>
-        <h1 class="font-bold mb-4">START YOUR FREE AMAZON STORE TODAY</h1>
+        <h1 class="font-bold mb-4">START YOUR ECOMMERCE JOURNEY</h1>
         <a href="#plans" class="btn btn-secondary rounded-pill font-bold px-5 py-2 shadow">See Plans</a>
       </div>
     </div>
@@ -30,7 +30,7 @@
                 <img src="@/assets/img/boxes.png" alt="Boxes" width="230" height="230" class=" mb-3">
                 <h5>DFY ECOMMERCE STORES</h5>
                 <p class="font-light mb-4">Whether it is AMAZON, WALMART, ETSY, or TikTok, we help you generate profits with our proven 4-Tier Automation, while you can enjoy a luxurious life.</p>
-                  <a href="https://dfy.ecomfulfil.store" class="btn btn-primary font-bold rounded-pill px-5 text-white shadow">Order Service</a>
+                  <a href="https://dfy.ecomfulfil.store/dfy-services" class="btn btn-primary font-bold rounded-pill px-5 text-white shadow">Order Service</a>
               </div>
             </div>
           </div>
