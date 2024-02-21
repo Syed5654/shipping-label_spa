@@ -30,7 +30,7 @@
                 <img src="@/assets/img/boxes.png" alt="Boxes" width="230" height="230" class=" mb-3">
                 <h5>DFY ECOMMERCE STORES</h5>
                 <p class="font-light mb-4">Whether it is AMAZON, WALMART, ETSY, or TikTok, we help you generate profits with our proven 4-Tier Automation, while you can enjoy a luxurious life.</p>
-                  <button class="btn btn-primary font-bold rounded-pill px-5 text-white shadow">Order Service</button>
+                  <a href="https://dfy.ecomfulfil.store" class="btn btn-primary font-bold rounded-pill px-5 text-white shadow">Order Service</a>
               </div>
             </div>
           </div>

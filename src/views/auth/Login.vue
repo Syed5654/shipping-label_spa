@@ -60,7 +60,11 @@ const handleLogin = () => {
         success();
         router.push("/generate-label");
       }
-    });
+    }).catch(() => {
+        loading.value = false;
+        const errorToast = new Toast(document.getElementById("errorToast"));
+        errorToast.show();
+      });
   } catch (error) {
     loading.value = false;
     const toast = new Toast(document.getElementById('errorToast'))

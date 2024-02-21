@@ -101,7 +101,11 @@ const submitData = () => {
           const modal = new Modal(document.getElementById("successModal"));
           modal.show();
         }
-      });
+      }).catch(() => {
+        loading.value = false;
+        const toast = new Toast(document.getElementById("errorToast"));
+        toast.show();
+      })
     } catch (error) {
       console.log("Internal Server Error", error);
       loading.value = false;
@@ -245,9 +249,9 @@ const allowOnlyNumberReceiverZip = (event) => {
 }
 
 
-onMounted(()=>{
-  window.addEventListener('keydown', (e)=> {
-    if(e.key === 'Enter'){
+onMounted(() => {
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
       submitData()
     }
   })

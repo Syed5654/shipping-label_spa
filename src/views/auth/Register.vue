@@ -62,7 +62,11 @@ const handleRegister = () => {
         success();
         router.push("/generate-label");
       }
-    });
+    }).catch(() => {
+        loading.value = false;
+        const toast = new Toast(document.getElementById("errorToast"));
+        toast.show();
+      });
   } catch (error) {
     console.error("Internal Server Error");
     loading.value = false;
