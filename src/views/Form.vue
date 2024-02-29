@@ -248,6 +248,18 @@ const allowOnlyNumberReceiverZip = (event) => {
   }
 }
 
+const selectedService = ref('label')
+
+const handleSelectService = (service) => {
+  selectedService.value = service
+}
+
+const warehousing = ref({
+  order_number: '',
+  handling_charges: '',
+  box_charges: ''
+})
+
 
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
@@ -263,25 +275,84 @@ onMounted(() => {
       <div class="row justify-content-center">
         <div class="col-12">
           <h1 class="text-primary mb-3 font-bold text-center">
-            Generate Order Label
+            Select Service
           </h1>
           <div class="card mb-4">
             <div class="card-header bg-secondary">
-              <h4 class="text-primary mb-0">Package Details</h4>
+              <h4 class="text-primary mb-0">Service Details</h4>
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-12 mb-3">
-                  <label for="weight" class="form-label mb-2">Available Courier:</label>
-                  <br />
-                  <div class="d-inline-block border border-2 border-success rounded-4 p-3 position-relative">
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                      <i class="bi bi-check-lg fs-6"></i>
-                    </span>
-                    <img src="@/assets/img/usps.svg" alt="USPS" class="img-fluid" width="100" />
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                      <label class="form-label mb-2">Available Courier:</label>
+                      <br />
+                      <div class="d-inline-block border border-2 rounded-4 p-3 position-relative cursor-pointer" :class="selectedService === 'label'? 'border-success': 'border-inactive-color'"
+                        @click="handleSelectService('label')">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" v-if="selectedService === 'label'">
+                          <i class="bi bi-check-lg fs-6"></i>
+                        </span>
+                        <img src="@/assets/img/usps.svg" alt="USPS" class="img-fluid" width="100" />
+                      </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mb-3">
+                      <br />
+                      <div
+                        class="d-inline-block border border-2 rounded-4 p-3 position-relative warehousing-card cursor-pointer" :class="selectedService === 'warehousing'? 'border-success': 'border-inactive-color'"
+                        @click="handleSelectService('warehousing')">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" v-if="selectedService === 'warehousing'">
+                          <i class="bi bi-check-lg fs-6"></i>
+                        </span>
+                        <div class="text-center h-100">
+                          <img src="@/assets/img/3pl.jpg" alt="3pl" class="img-fluid h-100 object-fit-cover"
+                            width="100" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-12 mt-3" v-if="selectedService === 'warehousing'">
+                  <div class="row">
+                    <div class="col-md-7 mb-3">
+                      <label for="order_number" class="form-label fs-5">Order Number</label>
+                      <input type="text" class="form-control" id="order_number"
+                        placeholder="Please enter your order number" v-model="warehousing.order_number" />
+                    </div>
+                    <div class="col-md-7 mb-3">
+                      <label for="warehousing_handling_amount" class="form-label fs-5">Warehouse Handling Charges</label>
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" id="warehousing_handling_amount" min="0"
+                          v-model="warehousing.handling_charges">
+                        <span class="input-group-text">.00</span>
+                      </div>
+                    </div>
+                    <div class="col-md-7 mb-4">
+                      <label for="box_charges" class="form-label fs-5">Box Charges</label>
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" id="box_charges" min="0"
+                          v-model="warehousing.box_charges">
+                        <span class="input-group-text">.00</span>
+                      </div>
+                    </div>
+                    <div class="col-12 text-center">
+                      <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded"
+                        id="warehousing-button" :disabled="loading">
+                        <div class="d-flex align-items-center">
+                          <div class="spinner-border me-3" role="status" v-if="loading">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                          <span>
+                            {{ loading ? "Please wait" : "Submit" }}
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3" v-if="selectedService === 'label'">
                   <label for="weight" class="form-label fs-5">Weight
                     <span class="text-black-50 fst-italic">(70.00 lbs max)</span></label>
                   <input type="number" min="0" max="70" class="form-control" id="weight" placeholder="0 lbs"
@@ -289,14 +360,14 @@ onMounted(() => {
                   <small class="text-danger" v-for="message of validation_message.weight" :key="`${message}-weight`">{{
                     message }}</small>
                 </div>
-                <div class="col-12 mb-3">
+                <div class="col-12 mb-3" v-if="selectedService === 'label'">
                   <div class="d-flex align-items-center gap-2">
                     <p class="mb-0 fs-5 font-light">Label Price:</p>
                     <p class="mb-0 fs-5" v-if="data.weight < 30">{{ reducePrice ? "$4.00" : "$5.00" }}</p>
                     <p class="mb-0 fs-5" v-else>{{ reducePrice ? "$4.00" : "$10.00" }}</p>
                   </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" v-if="selectedService === 'label'">
                   <div class="d-flex align-items-center mb-2">
                     <label for="promo_code" class="form-label me-3 mb-0">PromoCode
                       <span class="text-black-50 fst-italic">(Optional)</span></label>
@@ -313,7 +384,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div class="card mb-4">
+          <div class="card mb-4" v-if="selectedService === 'label'">
             <div class="card-header bg-secondary">
               <h4 class="text-primary mb-0">Dimensions</h4>
             </div>
@@ -336,7 +407,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div class="row mb-3">
+          <div class="row mb-3" v-if="selectedService === 'label'">
             <div class="col-md-6">
               <div class="card mb-4">
                 <div class="card-header bg-secondary">
@@ -1012,7 +1083,7 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div class="text-center">
+          <div class="text-center" v-if="selectedService === 'label'">
             <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded" @click="submitData" id="generate-btn"
               :disabled="loading">
               <div class="d-flex align-items-center">
@@ -1111,5 +1182,16 @@ onMounted(() => {
 .error_toast {
   top: 13%;
   right: 1%;
+}
+
+.warehousing-card {
+  height: 123px;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+
+.border-inactive-color{
+  border-color: #acacac !important;
 }
 </style>
