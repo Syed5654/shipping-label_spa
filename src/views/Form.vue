@@ -255,11 +255,80 @@ const handleSelectService = (service) => {
 }
 
 const warehousing = ref({
+  userId: userId,
   order_number: '',
   handling_charges: '',
   box_charges: ''
 })
 
+const warehouseValidation = ref({
+  order_number: '',
+  handling_charges: '',
+  box_charges: ''
+})
+
+const submitWarehousingData = async () => {
+  try {
+    loading.value = true
+    Api.post("warehousing", warehousing.value, {
+      headers: {
+        Authorization: `Bearer ${store.state.user.accessToken}`,
+      },
+    }).then((res) => {
+      console.log(res);
+      if (res.data.validation_message) {
+        loading.value = false;
+        warehouseValidation.value = res.data.validation_message;
+        let fieldNames = Object.keys(res.data.validation_message);
+        fieldNames.forEach((field) => {
+          let inputFields = document.getElementById(field);
+          inputFields.classList.add("is-invalid");
+          let firstInputField = document.getElementById(fieldNames[0]);
+          firstInputField.focus();
+          inputFields.addEventListener("input", () => {
+            if (inputFields.value.trim() !== "") {
+              inputFields.classList.remove("is-invalid");
+            } else {
+              inputFields.classList.add("is-invalid");
+            }
+          });
+        });
+        return;
+      } else if (res.data.balance_error) {
+        loading.value = false;
+        resetValidation();
+        const balanceModal = new Modal(
+          document.getElementById("insufficientBalanceModal")
+        );
+        balanceModal.show();
+        return;
+      } else {
+        warehousing.value = {
+          userId: userId,
+          order_number: '',
+          handling_charges: '',
+          box_charges: ''
+        }
+        warehouseValidation.value = {
+          order_number: '',
+          handling_charges: '',
+          box_charges: ''
+        }
+        loading.value = false
+        const successToast = new Toast(document.getElementById('successPayment'))
+        successToast.show()
+      }
+    }).catch(() => {
+      loading.value = false;
+    })
+  } catch (error) {
+    loading.value = false
+    const toast = new Toast(document.getElementById("errorToast"));
+    toast.show();
+    console.error('Error', error)
+
+  }
+}
 
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
@@ -288,9 +357,11 @@ onMounted(() => {
                     <div class="col-lg-2 col-md-4 col-6 mb-3">
                       <label class="form-label mb-2">Available Courier:</label>
                       <br />
-                      <div class="d-inline-block border border-2 rounded-4 p-3 position-relative cursor-pointer" :class="selectedService === 'label'? 'border-success': 'border-inactive-color'"
+                      <div class="d-inline-block border border-2 rounded-4 p-3 position-relative cursor-pointer"
+                        :class="selectedService === 'label' ? 'border-success' : 'border-inactive-color'"
                         @click="handleSelectService('label')">
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" v-if="selectedService === 'label'">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success"
+                          v-if="selectedService === 'label'">
                           <i class="bi bi-check-lg fs-6"></i>
                         </span>
                         <img src="@/assets/img/usps.svg" alt="USPS" class="img-fluid" width="100" />
@@ -299,9 +370,11 @@ onMounted(() => {
                     <div class="col-lg-2 col-md-4 col-6 mb-3">
                       <br />
                       <div
-                        class="d-inline-block border border-2 rounded-4 p-3 position-relative warehousing-card cursor-pointer" :class="selectedService === 'warehousing'? 'border-success': 'border-inactive-color'"
+                        class="d-inline-block border border-2 rounded-4 p-3 position-relative warehousing-card cursor-pointer"
+                        :class="selectedService === 'warehousing' ? 'border-success' : 'border-inactive-color'"
                         @click="handleSelectService('warehousing')">
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success" v-if="selectedService === 'warehousing'">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success"
+                          v-if="selectedService === 'warehousing'">
                           <i class="bi bi-check-lg fs-6"></i>
                         </span>
                         <div class="text-center h-100">
@@ -318,15 +391,19 @@ onMounted(() => {
                       <label for="order_number" class="form-label fs-5">Order Number</label>
                       <input type="text" class="form-control" id="order_number"
                         placeholder="Please enter your order number" v-model="warehousing.order_number" />
+                      <small class="text-danger" v-for="message of warehouseValidation.order_number"
+                        :key="`${message}-order_number`">{{ message }}</small>
                     </div>
                     <div class="col-md-7 mb-3">
-                      <label for="warehousing_handling_amount" class="form-label fs-5">Warehouse Handling Charges</label>
+                      <label for="handling_charges" class="form-label fs-5">Warehouse Handling Charges</label>
                       <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" class="form-control" id="warehousing_handling_amount" min="0"
+                        <input type="number" class="form-control" id="handling_charges" min="0"
                           v-model="warehousing.handling_charges">
                         <span class="input-group-text">.00</span>
                       </div>
+                      <small class="text-danger" v-for="message of warehouseValidation.handling_charges"
+                        :key="`${message}-handling_charges`">{{ message }}</small>
                     </div>
                     <div class="col-md-7 mb-4">
                       <label for="box_charges" class="form-label fs-5">Box Charges</label>
@@ -336,10 +413,12 @@ onMounted(() => {
                           v-model="warehousing.box_charges">
                         <span class="input-group-text">.00</span>
                       </div>
+                      <small class="text-danger" v-for="message of warehouseValidation.box_charges"
+                        :key="`${message}-box_charges`">{{ message }}</small>
                     </div>
                     <div class="col-12 text-center">
                       <button class="btn btn-primary font-bold text-white px-4 fs-5 rounded"
-                        id="warehousing-button" :disabled="loading">
+                        @click="submitWarehousingData" id="warehousing-button" :disabled="loading">
                         <div class="d-flex align-items-center">
                           <div class="spinner-border me-3" role="status" v-if="loading">
                             <span class="visually-hidden">Loading...</span>
@@ -1162,6 +1241,20 @@ onMounted(() => {
     </div>
   </div>
 
+  <!-- Success Toast -->
+  <div class="payment_toast position-fixed">
+    <div id="successPayment" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          Payment Successful.
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
   <!-- Loader -->
   <div
     class="loader bg-dark bg-opacity-75 text-white position-fixed top-0 left-0 vh-100 w-100 d-flex align-items-center justify-content-center"
@@ -1187,11 +1280,12 @@ onMounted(() => {
 .warehousing-card {
   height: 123px;
 }
-.cursor-pointer{
+
+.cursor-pointer {
   cursor: pointer;
 }
 
-.border-inactive-color{
+.border-inactive-color {
   border-color: #acacac !important;
 }
 </style>
