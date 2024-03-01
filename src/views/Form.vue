@@ -275,7 +275,6 @@ const submitWarehousingData = async () => {
         Authorization: `Bearer ${store.state.user.accessToken}`,
       },
     }).then((res) => {
-      console.log(res);
       if (res.data.validation_message) {
         loading.value = false;
         warehouseValidation.value = res.data.validation_message;
@@ -332,8 +331,12 @@ const submitWarehousingData = async () => {
 
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && selectedService.value === 'label') {
       submitData()
+    }
+
+    if (e.key === 'Enter' && selectedService.value === 'warehousing') {
+      submitWarehousingData()
     }
   })
 })
@@ -442,7 +445,8 @@ onMounted(() => {
                 <div class="col-12 mb-3" v-if="selectedService === 'label'">
                   <div class="d-flex align-items-center gap-2">
                     <p class="mb-0 fs-5 font-light">Label Price:</p>
-                    <p class="mb-0 fs-5" v-if="data.weight < 30">{{ reducePrice ? "$4.00" : "$5.00" }}</p>
+                    <p class="mb-0 fs-5" v-if="data.promo_code === 'SH1P5ECR3T'">$5.00</p>
+                    <p class="mb-0 fs-5" v-else-if="data.weight < 30">{{ reducePrice ? "$4.00" : "$5.00" }}</p>
                     <p class="mb-0 fs-5" v-else>{{ reducePrice ? "$4.00" : "$10.00" }}</p>
                   </div>
                 </div>
@@ -1276,7 +1280,10 @@ onMounted(() => {
   top: 13%;
   right: 1%;
 }
-
+.payment_toast{
+  top: 13%;
+  right: 1%;
+}
 .warehousing-card {
   height: 123px;
 }
