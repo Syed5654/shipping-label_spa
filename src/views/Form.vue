@@ -17,6 +17,9 @@ const reducePrice = ref(false)
 const data = ref({
   userId: userId,
   weight: "",
+  height: '',
+  length: '',
+  width: '',
   promo_code: "",
   sender_name: "",
   sender_company: "",
@@ -38,6 +41,9 @@ const data = ref({
 
 const validation_message = ref({
   weight: "",
+  height: '',
+  length: '',
+  width: '',
   sender_name: "",
   sender_company: "",
   sender_street: "",
@@ -140,6 +146,9 @@ const success = () => {
   data.value = {
     userId: userId,
     weight: "",
+    height: '',
+    length: '',
+    width: '',
     sender_name: "",
     sender_company: "",
     sender_street: "",
@@ -157,17 +166,14 @@ const success = () => {
     receiver_city: "",
     receiver_country: "",
   };
-
-  dimensions.value = {
-    height: '',
-    length: '',
-    width: ''
-  }
 };
 
 const resetValidation = () => {
   validation_message.value = {
     weight: "",
+    height: '',
+    length: '',
+    width: '',
     sender_name: "",
     sender_company: "",
     sender_street: "",
@@ -186,12 +192,6 @@ const resetValidation = () => {
     receiver_country: "",
   };
 };
-
-const dimensions = ref({
-  height: '',
-  length: '',
-  width: ''
-})
 
 const hideBalanceModal = () => {
   const balanceModal = Modal.getInstance(
@@ -476,16 +476,22 @@ onMounted(() => {
                 <div class="col-md-6 mb-3">
                   <label for="length" class="form-label">Length (in)</label>
                   <input type="number" class="form-control" id="length" placeholder="0.00 in"
-                    v-model="dimensions.length" />
+                    v-model="data.length" />
+                    <small class="text-danger" v-for="message of validation_message.length" :key="`${message}-length`">{{
+                    message }}</small>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="width" class="form-label">Width (in)</label>
-                  <input type="number" class="form-control" id="width" placeholder="0.00 in" v-model="dimensions.width" />
+                  <input type="number" class="form-control" id="width" placeholder="0.00 in" v-model="data.width" />
+                  <small class="text-danger" v-for="message of validation_message.width" :key="`${message}-width`">{{
+                    message }}</small>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="height" class="form-label">Height (in)</label>
                   <input type="number" class="form-control" id="height" placeholder="0.00 in"
-                    v-model="dimensions.height" />
+                    v-model="data.height" />
+                    <small class="text-danger" v-for="message of validation_message.height" :key="`${message}-height`">{{
+                    message }}</small>
                 </div>
               </div>
             </div>
@@ -1269,7 +1275,8 @@ onMounted(() => {
       </div>
       <h5>
         Please wait! <br />
-        This may take some time
+        <span v-if="selectedService === 'label'">This may take some time</span> <br>
+        <span v-if="selectedService === 'label'">Estimated Time: 1 minute 30 seconds</span>
       </h5>
     </div>
   </div>
@@ -1294,5 +1301,8 @@ onMounted(() => {
 
 .border-inactive-color {
   border-color: #acacac !important;
+}
+.loader{
+  z-index: 100;
 }
 </style>
