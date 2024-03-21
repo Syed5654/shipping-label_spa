@@ -1276,7 +1276,7 @@ onMounted(() => {
       <h5>
         Please wait! <br />
         <span v-if="selectedService === 'label'">This may take some time</span> <br>
-        <span v-if="selectedService === 'label'">Estimated Time: 1 minute 30 seconds</span>
+        <span v-if="selectedService === 'label'">Estimated Time: 1 minute</span>
       </h5>
     </div>
   </div>
