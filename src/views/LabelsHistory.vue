@@ -71,7 +71,8 @@ const getWarehouseHistory = async () => {
                 <td><span class="badge bg-success">Success</span></td>
                 <td><small>{{ new Date(order.createdAt).toLocaleDateString() }}, {{ new
                   Date(order.createdAt).toLocaleTimeString() }}</small></td>
-                <td> <a :href="order.pdf" target="_blank" class="btn btn-primary"><i class="bi bi-download"></i> PDF</a></td>
+                <td v-if="order.pdf"> <a :href="order.pdf" target="_blank" class="btn btn-primary"><i class="bi bi-download"></i> PDF</a></td>
+                <td v-else></td>
               </tr>
               <tr v-if="orderHistory.length === 0" class="align-middle">
                 <td class="text-center" colspan="8">No data Found</td>

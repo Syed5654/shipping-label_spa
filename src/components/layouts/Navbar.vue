@@ -15,7 +15,7 @@ if(store.state.isLoggedIn){
 
 const logOut = () => {
   localStorage.removeItem('user')
-  router.push('/login')
+  window.location.href = '/login'
 }
 </script>
 <template>

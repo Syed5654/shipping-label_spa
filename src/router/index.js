@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useStore } from "vuex";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -42,17 +43,39 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/auth/Login.vue"),
     },
+    {
+      path: "/role/admin/login",
+      name: "Admin Login",
+      component: () => import("../views/admin/Login.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/role/admin",
+      name: "Admin Portal",
+      component: () => import("../views/admin/Portal.vue"),
+      meta: {
+        requiresAuth: true,
+        role:'admin'
+      },
+    },
   ],
 });
 
 router.beforeEach((to, from, next) => {
+  let store = useStore();
   const jsonData = localStorage.getItem("user");
   const userData = JSON.parse(jsonData);
-  if ( to.meta.requiresAuth && !userData) {
+  if(to.meta.requiresAuth && to.meta.role === 'admin' && store.state.user?.type !== 'admin'){
+    next('/')
+  }else if(to.meta.requiresAuth && !userData && to.name !== 'Admin Login'){
     next("/login");
-  } else {
-    next();
   }
+  else {
+     next();
+   } 
+  
 });
 
 export default router;

@@ -59,8 +59,8 @@ const validateUser = async () => {
     </div>
   </div>
   <div v-else>
-    <Navbar v-if="route.name && route.name !== 'register' && route.name !== 'login'" />
+    <Navbar v-if="route.name && route.name !== 'register' && route.name !== 'login' && route.name !== 'Admin Login' && route.name !== 'Admin Portal'" />
     <RouterView />
-    <Footer/>
+    <Footer v-if="route.name && route.name !== 'Admin Login' && route.name !== 'Admin Portal'"/>
   </div>
 </template>
